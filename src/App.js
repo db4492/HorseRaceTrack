@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import RaceTrack from './components/RaceTrack';
 import BettingPanel from './components/BettingPanel';
 import './App.css';
@@ -58,7 +58,7 @@ function App() {
   };
 
   // Generate horses with random names and odds
-  const generateHorses = () => {
+  const generateHorses = useCallback(() => {
     const horses = [];
     const usedNames = new Set();
 
@@ -76,7 +76,7 @@ function App() {
       });
     }
     return horses;
-  };
+  }, []);
 
   const [horses, setHorses] = useState(() => generateHorses());
 
@@ -84,7 +84,7 @@ function App() {
   useEffect(() => {
     if (!isRacing) {
       const timer = setTimeout(() => {
-        setHorses(generateHorses());
+        setHorses(generateHorses);
       }, 2000); // Wait for horses to return to start
       return () => clearTimeout(timer);
     }
