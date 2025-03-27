@@ -84,11 +84,11 @@ function App() {
   useEffect(() => {
     if (!isRacing) {
       const timer = setTimeout(() => {
-        setHorses(generateHorses);
+        setHorses(generateHorses());
       }, 2000); // Wait for horses to return to start
       return () => clearTimeout(timer);
     }
-  }, [isRacing]);
+  }, [isRacing, generateHorses]);
 
   const handleBet = (horseId, amount) => {
     if (amount <= balance && !isRacing) {
