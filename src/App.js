@@ -9,35 +9,35 @@ function App() {
   const [winner, setWinner] = useState(null);
   const [bettingHistory, setBettingHistory] = useState([]);
 
-  // Expanded word banks for name generation
-  const adjectives = [
-    "Cosmic", "Midnight", "Thunder", "Lightning", "Mystic", "Crazy", 
-    "Dizzy", "Turbo", "Quantum", "Pixel", "Glitch", "Neon", "Laser",
-    "Rocket", "Chaos", "Disco", "Ninja", "Zombie", "Viking", "Pirate",
-    "Cyber", "Psycho", "Mega", "Ultra", "Hyper", "Retro", "Plasma",
-    "Nuclear", "Dragon", "Ghost", "Savage", "Disco", "Rainbow", "Metal",
-    "Space", "Time", "Storm", "Nebula", "Galactic", "Techno", "Wizard"
-  ];
-
-  const actions = [
-    "Dancer", "Sprinter", "Drifter", "Climber", "Surfer", "Jumper",
-    "Warrior", "Racer", "Crusher", "Dasher", "Prancer", "Zoomer",
-    "Slider", "Glider", "Hopper", "Runner", "Charger", "Blazer",
-    "Smasher", "Blaster", "Ninja", "Dazzler", "Sparkler", "Brawler",
-    "Bouncer", "Rusher", "Crasher", "Basher", "Slasher", "Zapper",
-    "Ripper", "Raver", "Rager", "Rocker", "Rebel", "Phantom"
-  ];
-
-  const descriptors = [
-    "of Doom", "of Glory", "Supreme", "Ultimate", "Master", "Champion",
-    "Legend", "Beast", "Machine", "Prime", "Elite", "Extreme",
-    "Maverick", "Prodigy", "Phenomenon", "Wonder", "Mastermind",
-    "of Chaos", "of Thunder", "Infinity", "Maximum", "Ultra",
-    "of Mystery", "of Power", "Unleashed", "Evolved", "Ascended",
-    "of Light", "of Darkness", "Eternal", "Unstoppable", "Invincible"
-  ];
-
   const generateHorseName = useCallback(() => {
+    // Move the word banks inside the callback
+    const adjectives = [
+      "Cosmic", "Midnight", "Thunder", "Lightning", "Mystic", "Crazy", 
+      "Dizzy", "Turbo", "Quantum", "Pixel", "Glitch", "Neon", "Laser",
+      "Rocket", "Chaos", "Disco", "Ninja", "Zombie", "Viking", "Pirate",
+      "Cyber", "Psycho", "Mega", "Ultra", "Hyper", "Retro", "Plasma",
+      "Nuclear", "Dragon", "Ghost", "Savage", "Disco", "Rainbow", "Metal",
+      "Space", "Time", "Storm", "Nebula", "Galactic", "Techno", "Wizard"
+    ];
+
+    const actions = [
+      "Dancer", "Sprinter", "Drifter", "Climber", "Surfer", "Jumper",
+      "Warrior", "Racer", "Crusher", "Dasher", "Prancer", "Zoomer",
+      "Slider", "Glider", "Hopper", "Runner", "Charger", "Blazer",
+      "Smasher", "Blaster", "Ninja", "Dazzler", "Sparkler", "Brawler",
+      "Bouncer", "Rusher", "Crasher", "Basher", "Slasher", "Zapper",
+      "Ripper", "Raver", "Rager", "Rocker", "Rebel", "Phantom"
+    ];
+
+    const descriptors = [
+      "of Doom", "of Glory", "Supreme", "Ultimate", "Master", "Champion",
+      "Legend", "Beast", "Machine", "Prime", "Elite", "Extreme",
+      "Maverick", "Prodigy", "Phenomenon", "Wonder", "Mastermind",
+      "of Chaos", "of Thunder", "Infinity", "Maximum", "Ultra",
+      "of Mystery", "of Power", "Unleashed", "Evolved", "Ascended",
+      "of Light", "of Darkness", "Eternal", "Unstoppable", "Invincible"
+    ];
+
     const namePatterns = [
       // Pattern 1: Adjective + Action
       () => `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${actions[Math.floor(Math.random() * actions.length)]}`,
@@ -54,7 +54,7 @@ function App() {
 
     const pattern = namePatterns[Math.floor(Math.random() * namePatterns.length)];
     return pattern();
-  }, [actions, adjectives, descriptors]);
+  }, []); // No dependencies needed now
 
   const generateHorses = useCallback(() => {
     const horses = [];
