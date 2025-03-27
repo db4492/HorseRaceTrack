@@ -1,0 +1,220 @@
+.betting-panel {
+  margin: 20px auto;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.horse-selection {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.horse-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 2px solid #4CAF50;
+  border-radius: 5px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.horse-button:hover:not(:disabled) {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.horse-button.selected {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.horse-button:disabled {
+  border-color: #ccc;
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.bet-amount {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.bet-amount input {
+  padding: 8px;
+  width: 100px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.bet-amount button {
+  padding: 8px 20px;
+  background-color: #2c5282;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bet-amount button:hover:not(:disabled) {
+  background-color: #2b6cb0;
+}
+
+.bet-amount button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.betting-history {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.betting-history h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  text-align: center;
+}
+
+.no-bets {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.history-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.history-item {
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  border-left: 4px solid #ccc;
+}
+
+.history-item.win {
+  border-left-color: #4CAF50;
+  background-color: #f0fff0;
+}
+
+.history-item.loss {
+  border-left-color: #ff4444;
+  background-color: #fff0f0;
+}
+
+.bet-time {
+  font-size: 0.8em;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.bet-details {
+  margin-bottom: 4px;
+}
+
+.win-amount {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.loss-amount {
+  color: #ff4444;
+}
+
+.race-track {
+  width: 80%;
+  margin: 20px auto;
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.surface-label {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 2px 15px;
+  border-radius: 15px;
+  font-size: 0.9em;
+}
+
+.starting-line {
+  position: absolute;
+  left: 150px; /* Adjusted to be after the names */
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.track-lane {
+  height: 40px;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.track-lane:last-child {
+  border-bottom: none;
+}
+
+.horse-name {
+  position: absolute;
+  left: 10px;
+  width: 130px; /* Fixed width for names */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.horse-emoji {
+  position: absolute;
+  left: 150px; /* Align with starting line */
+  transform-origin: left center;
+  font-size: 1.2em;
+  transform: scaleX(-1);
+}
+
+.horse-emoji.winner {
+  color: #ffd700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Grass surface styling */
+.race-track.grass {
+  background-color: #90c890;
+}
+
+.track-lane.grass {
+  background-color: #a3d4a3;
+}
+
+/* Dirt surface styling */
+.race-track.dirt {
+  background-color: #e0c9a6;
+}
+
+.track-lane.dirt {
+  background-color: #ebd5b6;
+} 

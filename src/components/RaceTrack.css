@@ -1,0 +1,146 @@
+.race-track {
+  width: 80%;
+  margin: 20px auto;
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.track-container {
+  position: relative;
+}
+
+.track-lane {
+  height: 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  position: relative;
+}
+
+.name-section {
+  width: 200px;
+  min-width: 200px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  border-right: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+.race-section {
+  flex-grow: 1;
+  position: relative;
+  margin-left: 1px;
+  margin-right: 20px;
+  width: calc(100% - 40px);
+}
+
+.checkered-finish {
+  position: absolute;
+  right: 0px;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  background-image: 
+    repeating-conic-gradient(#000 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+  border-left: 4px solid #000;
+  border-right: 4px solid #000;
+  z-index: 1;
+}
+
+.finish-label {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.horse-name {
+  white-space: nowrap;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.horse-emoji {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) scaleX(-1);
+  font-size: 1.2em;
+  z-index: 2;
+}
+
+.horse-emoji.winner {
+  color: #ffd700;
+  text-shadow: 
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    0 0 8px #ffd700;
+}
+
+.surface-label {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 2px 15px;
+  border-radius: 15px;
+  font-size: 0.9em;
+}
+
+/* Surface styles */
+.race-track.grass {
+  background-color: #90c890;
+}
+
+.track-lane.grass {
+  background-color: #a3d4a3;
+}
+
+.race-track.dirt {
+  background-color: #e0c9a6;
+}
+
+.track-lane.dirt {
+  background-color: #ebd5b6;
+}
+
+.starting-line {
+  position: absolute;
+  right: -400px;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background-image: 
+    repeating-linear-gradient(45deg, #000 0px, #000 2px, transparent 2px, transparent 4px),
+    repeating-linear-gradient(-45deg, #000 0px, #000 2px, transparent 2px, transparent 4px);
+  border-right: 4px solid #000;
+  border-left: 4px solid #000;
+  z-index: 1;
+}
+
+.start-label {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 10;
+}
