@@ -54,7 +54,7 @@ function App() {
 
     const pattern = namePatterns[Math.floor(Math.random() * namePatterns.length)];
     return pattern();
-  }, []);
+  }, [actions, adjectives, descriptors]);
 
   const generateHorses = useCallback(() => {
     const horses = [];
