@@ -37,8 +37,7 @@ function App() {
     "of Light", "of Darkness", "Eternal", "Unstoppable", "Invincible"
   ];
 
-  // Function to generate a random horse name
-  const generateHorseName = () => {
+  const generateHorseName = useCallback(() => {
     const namePatterns = [
       // Pattern 1: Adjective + Action
       () => `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${actions[Math.floor(Math.random() * actions.length)]}`,
@@ -55,9 +54,8 @@ function App() {
 
     const pattern = namePatterns[Math.floor(Math.random() * namePatterns.length)];
     return pattern();
-  };
+  }, []);
 
-  // Generate horses with random names and odds
   const generateHorses = useCallback(() => {
     const horses = [];
     const usedNames = new Set();
@@ -72,11 +70,11 @@ function App() {
       horses.push({
         id: i + 1,
         name: name,
-        odds: (Math.floor(Math.random() * 35) + 15) / 10 // Random odds between 1.5 and 5.0
+        odds: (Math.floor(Math.random() * 35) + 15) / 10
       });
     }
     return horses;
-  }, []);
+  }, [generateHorseName]);
 
   const [horses, setHorses] = useState(() => generateHorses());
 
@@ -85,7 +83,7 @@ function App() {
     if (!isRacing) {
       const timer = setTimeout(() => {
         setHorses(generateHorses());
-      }, 2000); // Wait for horses to return to start
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [isRacing, generateHorses]);
