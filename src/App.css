@@ -35,4 +35,21 @@ h2 {
   margin: 5px 0 0;
   color: #666;
   font-size: 0.9em;
+}
+
+.mute-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.mute-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 } 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import RaceTrack from './components/RaceTrack';
 import BettingPanel from './components/BettingPanel';
 import StatsLegend from './components/StatsLegend';
@@ -27,6 +27,8 @@ function App() {
   const [isRacing, setIsRacing] = useState(false);
   const [winner, setWinner] = useState(null);
   const [bettingHistory, setBettingHistory] = useState([]);
+  const audioRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(false);
 
   const generateHorseName = useCallback(() => {
     // Move the word banks inside the callback
@@ -155,12 +157,25 @@ function App() {
       setBalance(prev => prev - amount);
       setIsRacing(true);
       
+      // Play the bugle call
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play()
+          .catch(error => console.log('Audio playback failed:', error));
+      }
+      
       const winner = horses[Math.floor(Math.random() * horses.length)];
       setWinner(winner);
       
       setTimeout(() => {
         const didWin = winner.id === horseId;
         const winnings = didWin ? amount * horses.find(h => h.id === horseId).odds : 0;
+        
+        // Stop the audio
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+        }
         
         setBettingHistory(prev => [{
           id: Date.now(),
@@ -185,13 +200,35 @@ function App() {
         setWeather(generateWeather());
         setIsRacing(false);
         setTimeout(() => setWinner(null), 2000);
-      }, 3000);
+      }, 4000);
     }
   };
+
+  // Optional: Clean up audio when component unmounts
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
 
   return (
     <div className="App">
       <h1>Horse Race Betting</h1>
+      <button 
+        className="mute-button" 
+        onClick={() => setIsMuted(!isMuted)}
+      >
+        {isMuted ? '🔇' : '🔊'}
+      </button>
       <h2>Balance: ${balance}</h2>
       
       {/* Add the legend after the header */}
@@ -217,6 +254,10 @@ function App() {
         bettingHistory={bettingHistory}
         weather={weather}
       />
+      <audio ref={audioRef} preload="auto">
+        <source src="/sounds/first-call.mp3" type="audio/mpeg" />
+        <source src="/sounds/first-call.ogg" type="audio/ogg" />
+      </audio>
     </div>
   );
 }
