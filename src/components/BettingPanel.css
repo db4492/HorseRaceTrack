@@ -125,6 +125,15 @@
   margin-bottom: 4px;
 }
 
+.history-amount {
+  margin-right: 10px;
+}
+
+.history-winnings,
+.history-loss {
+  margin-left: 10px;
+}
+
 .win-amount {
   color: #4CAF50;
   font-weight: bold;

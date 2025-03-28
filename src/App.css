@@ -52,4 +52,21 @@ h2 {
 
 .mute-button:hover {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.achievements-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.achievements-button:hover {
+  transform: translateY(-2px);
 } 

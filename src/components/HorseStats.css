@@ -57,4 +57,21 @@
   margin-top: 8px;
   width: 100%;
   z-index: 1;
+}
+
+.personality-row {
+  padding: 8px;
+  margin-bottom: 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  text-align: center;
+  font-style: italic;
+  color: #666;
+}
+
+.personality-trait {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 } 

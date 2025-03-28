@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import RaceTrack from './components/RaceTrack';
 import BettingPanel from './components/BettingPanel';
 import StatsLegend from './components/StatsLegend';
+import HorseFacts from './components/HorseFacts';
+import PhotoFinish from './components/PhotoFinish';
+import Achievements from './components/Achievements';
 import './App.css';
 
 function App() {
@@ -38,6 +41,74 @@ function App() {
     sounds.forEach(sound => sound.preload = 'auto');
     return sounds;
   });
+  const [showPhotoFinish, setShowPhotoFinish] = useState(false);
+  const [secondPlace, setSecondPlace] = useState(null);
+  const [achievements, setAchievements] = useState([]);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [consecutiveWins, setConsecutiveWins] = useState(0);
+  const [lossStreak, setLossStreak] = useState(0);
+
+  // Add this at the top of App.js with other state definitions
+  const achievementsList = {
+    firstWin: {
+      title: "Beginner's Luck",
+      description: "Won your first race!",
+      icon: "🎯"
+    },
+    bigWinner: {
+      title: "Horse Whisperer",
+      description: "Won more than 5x your bet",
+      icon: "🤫"
+    },
+    luckyStreak: {
+      title: "Lucky Duck",
+      description: "Won 3 races in a row",
+      icon: "🦆"
+    },
+    highRoller: {
+      title: "Money Bags",
+      description: "Bet over $500 in one race",
+      icon: "💰"
+    },
+    weatherMaster: {
+      title: "Storm Chaser",
+      description: "Won during stormy weather",
+      icon: "⛈️"
+    },
+    comeback: {
+      title: "Phoenix Rising",
+      description: "Won after losing 5 times",
+      icon: "🔥"
+    },
+    jackpot: {
+      title: "Golden Horseshoe",
+      description: "Won over $1000 in one race",
+      icon: "🏆"
+    },
+    underdog: {
+      title: "Dark Horse",
+      description: "Won with the lowest odds",
+      icon: "🐎"
+    }
+  };
+
+  const personalityTraits = [
+    { trait: "Loves Carrots", icon: "🥕" },
+    { trait: "Afraid of Butterflies", icon: "🦋" },
+    { trait: "Dreams of Being a Unicorn", icon: "🦄" },
+    { trait: "Practices Yoga", icon: "🧘" },
+    { trait: "Aspiring Instagram Model", icon: "📸" },
+    { trait: "Thinks They're a Dog", icon: "🐕" },
+    { trait: "Professional Napper", icon: "💤" },
+    { trait: "Addicted to Sugar Cubes", icon: "🧊" },
+    { trait: "Secret Opera Singer", icon: "🎭" },
+    { trait: "Always Taking Selfies", icon: "🤳" },
+    { trait: "Believes They Can Fly", icon: "✈️" },
+    { trait: "Watches Too Much TV", icon: "📺" },
+    { trait: "Amateur Comedian", icon: "🎤" },
+    { trait: "Scared of Own Shadow", icon: "👻" },
+    { trait: "Dreams of Beach Vacation", icon: "🏖️" }
+  ];
 
   const generateHorseName = useCallback(() => {
     // Move the word banks inside the callback
@@ -97,23 +168,22 @@ function App() {
       } while (usedNames.has(name));
       
       usedNames.add(name);
-      // Generate random stats between 1-100
-      const stats = {
-        speed: Math.floor(Math.random() * 100) + 1,
-        stamina: Math.floor(Math.random() * 100) + 1,
-        acceleration: Math.floor(Math.random() * 100) + 1,
-        luck: Math.floor(Math.random() * 100) + 1
-      };
       
-      // Calculate odds based on stats
-      const statAverage = (stats.speed + stats.stamina + stats.acceleration + stats.luck) / 4;
-      const odds = Math.max(1.5, (6 - (statAverage / 25))).toFixed(1);
+      // Make sure we're selecting a random personality trait
+      const randomTraitIndex = Math.floor(Math.random() * personalityTraits.length);
+      const personality = personalityTraits[randomTraitIndex];
 
       horses.push({
         id: i + 1,
         name: name,
-        odds: parseFloat(odds),
-        stats: stats
+        personality: personality,
+        odds: (Math.floor(Math.random() * 35) + 15) / 10,
+        stats: {
+          speed: Math.floor(Math.random() * 100) + 1,
+          stamina: Math.floor(Math.random() * 100) + 1,
+          acceleration: Math.floor(Math.random() * 100) + 1,
+          luck: Math.floor(Math.random() * 100) + 1
+        }
       });
     }
     return horses;
@@ -161,19 +231,77 @@ function App() {
   //   return stats;
   // };
 
+  // Function to check and award achievements
+  const checkAchievements = (didWin, amount, winnings, weather) => {
+    const newAchievements = [...achievements];
+
+    // First win
+    if (didWin && !achievements.includes('firstWin')) {
+      newAchievements.push('firstWin');
+    }
+
+    // Big winner
+    if (didWin && winnings >= amount * 5 && !achievements.includes('bigWinner')) {
+      newAchievements.push('bigWinner');
+    }
+
+    // High roller
+    if (amount >= 500 && !achievements.includes('highRoller')) {
+      newAchievements.push('highRoller');
+    }
+
+    // Weather master
+    if (didWin && weather.name === 'Stormy' && !achievements.includes('weatherMaster')) {
+      newAchievements.push('weatherMaster');
+    }
+
+    // Jackpot
+    if (didWin && winnings >= 1000 && !achievements.includes('jackpot')) {
+      newAchievements.push('jackpot');
+    }
+
+    // Update consecutive wins
+    if (didWin) {
+      const newConsecutiveWins = consecutiveWins + 1;
+      setConsecutiveWins(newConsecutiveWins);
+      setLossStreak(0);
+
+      // Lucky streak
+      if (newConsecutiveWins >= 3 && !achievements.includes('luckyStreak')) {
+        newAchievements.push('luckyStreak');
+      }
+    } else {
+      setConsecutiveWins(0);
+      const newLossStreak = lossStreak + 1;
+      setLossStreak(newLossStreak);
+
+      // Comeback
+      if (newLossStreak >= 5 && didWin && !achievements.includes('comeback')) {
+        newAchievements.push('comeback');
+      }
+    }
+
+    // If new achievements were earned, update state and show notification
+    if (newAchievements.length > achievements.length) {
+      setAchievements(newAchievements);
+      const newAchievement = newAchievements[newAchievements.length - 1];
+      alert(`🏆 Achievement Unlocked: ${achievementsList[newAchievement].title}!`);
+    }
+  };
+
   const handleBet = (horseId, amount) => {
     if (amount <= balance && !isRacing) {
       setBalance(prev => prev - amount);
       setIsRacing(true);
       
-      // Randomly select one of the audio files
+      const winner = horses[Math.floor(Math.random() * horses.length)];
+      setWinner(winner);
+      
+      // Play the bugle call
       const randomAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];
       randomAudio.currentTime = 0;
       randomAudio.play()
         .catch(error => console.log('Audio playback failed:', error));
-      
-      const winner = horses[Math.floor(Math.random() * horses.length)];
-      setWinner(winner);
       
       setTimeout(() => {
         const didWin = winner.id === horseId;
@@ -183,6 +311,7 @@ function App() {
         randomAudio.pause();
         randomAudio.currentTime = 0;
         
+        // Update betting history
         setBettingHistory(prev => [{
           id: Date.now(),
           horseName: horses.find(h => h.id === horseId).name,
@@ -190,6 +319,7 @@ function App() {
           winnings: winnings,
           winner: winner.name,
           winnerStats: winner.stats,
+          winnerPersonality: winner.personality,
           didWin: didWin,
           timestamp: new Date().toLocaleTimeString(),
           weather: weather.name,
@@ -198,9 +328,13 @@ function App() {
 
         if (didWin) {
           setBalance(prev => prev + winnings);
-          alert(`You won $${winnings}!`);
+          if (winnings >= amount * 4) {
+            alert(`🤑 JACKPOT! You won $${winnings}! 🎉`);
+          } else {
+            alert(`🎉 You won $${winnings}! 🏆`);
+          }
         } else {
-          alert(`You lost! ${winner.name} won the race.`);
+          alert(`😅 You lost! ${winner.name} won the race. 🐎`);
         }
         
         setWeather(generateWeather());
@@ -228,9 +362,13 @@ function App() {
     });
   }, [isMuted, audioFiles]);
 
+  useEffect(() => {
+    document.title = "Cosmic Smasher Unstoppable Horse Race Simulator";
+  }, []);
+
   return (
     <div className="App">
-      <h1>Horse Race Betting</h1>
+      <h1>Cosmic Smasher Unstoppable Horse Race Simulator</h1>
       <button 
         className="mute-button" 
         onClick={() => setIsMuted(!isMuted)}
@@ -255,6 +393,9 @@ function App() {
         winner={winner}
         weather={weather}
       />
+
+      <HorseFacts isRacing={isRacing} />
+
       <BettingPanel 
         horses={horses} 
         onBet={handleBet} 
@@ -266,6 +407,26 @@ function App() {
         <source src="/sounds/first-call.mp3" type="audio/mpeg" />
         <source src="/sounds/first-call.ogg" type="audio/ogg" />
       </audio>
+      {showPhotoFinish && (
+        <PhotoFinish 
+          isVisible={showPhotoFinish} 
+          winner={winner} 
+          secondPlace={secondPlace}
+        />
+      )}
+      <button 
+        className="achievements-button"
+        onClick={() => setShowAchievements(true)}
+      >
+        🏆 Achievements
+      </button>
+      
+      {showAchievements && (
+        <Achievements 
+          achievements={achievements}
+          onClose={() => setShowAchievements(false)}
+        />
+      )}
     </div>
   );
 }

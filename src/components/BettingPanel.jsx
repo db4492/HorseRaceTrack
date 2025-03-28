@@ -81,7 +81,7 @@ function BettingPanel({ horses, onBet, disabled, bettingHistory }) {
                 {expandedBet === bet.id && (
                   <div className="winner-stats">
                     <h4>Winning Horse Stats</h4>
-                    <HorseStats stats={bet.winnerStats} className="history-stats-popup" />
+                    <HorseStats stats={bet.winnerStats} personality={bet.winnerPersonality} />
                   </div>
                 )}
               </div>

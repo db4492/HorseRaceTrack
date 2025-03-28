@@ -1,0 +1,27 @@
+.horse-fact {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px auto;
+  max-width: 600px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: opacity 0.3s ease;
+}
+
+.fact-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fact-icon {
+  font-size: 24px;
+  min-width: 32px;
+}
+
+.fact-content p {
+  margin: 0;
+  color: #444;
+  font-size: 0.95em;
+  line-height: 1.4;
+} 

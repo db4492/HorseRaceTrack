@@ -91,7 +91,11 @@ function RaceTrack({ horses, isRacing, winner, weather }) {
                 {' '}{horse.name}
               </span>
               <div className="stats-popup">
-                <HorseStats stats={horse.stats} />
+                {console.log('Horse in RaceTrack:', horse)}
+                <HorseStats 
+                  stats={horse.stats} 
+                  personality={horse.personality}
+                />
               </div>
             </div>
             <div className="race-section">
