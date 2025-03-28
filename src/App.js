@@ -29,6 +29,11 @@ function App() {
   const [bettingHistory, setBettingHistory] = useState([]);
   const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [audio] = useState(() => {
+    const sound = new Audio('/sounds/first-call.mp3');
+    sound.preload = 'auto';
+    return sound;
+  });
 
   const generateHorseName = useCallback(() => {
     // Move the word banks inside the callback
@@ -158,11 +163,9 @@ function App() {
       setIsRacing(true);
       
       // Play the bugle call
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play()
-          .catch(error => console.log('Audio playback failed:', error));
-      }
+      audio.currentTime = 0;
+      audio.play()
+        .catch(error => console.log('Audio playback failed:', error));
       
       const winner = horses[Math.floor(Math.random() * horses.length)];
       setWinner(winner);
@@ -172,10 +175,8 @@ function App() {
         const winnings = didWin ? amount * horses.find(h => h.id === horseId).odds : 0;
         
         // Stop the audio
-        if (audioRef.current) {
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0;
-        }
+        audio.pause();
+        audio.currentTime = 0;
         
         setBettingHistory(prev => [{
           id: Date.now(),
@@ -204,15 +205,14 @@ function App() {
     }
   };
 
-  // Optional: Clean up audio when component unmounts
+  // Clean up audio when component unmounts
   useEffect(() => {
+    const currentAudio = audio;
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
     };
-  }, []);
+  }, [audio]);
 
   useEffect(() => {
     if (audioRef.current) {
