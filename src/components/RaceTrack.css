@@ -209,3 +209,22 @@
   color: #666;
   cursor: help;
 }
+
+/* Weather effects on track */
+.race-track.rainy {
+  background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), 
+              repeating-linear-gradient(to right, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px);
+}
+
+.race-track.windy {
+  animation: wind-effect 2s linear infinite;
+}
+
+.race-track.stormy {
+  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2));
+}
+
+@keyframes wind-effect {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 0; }
+}

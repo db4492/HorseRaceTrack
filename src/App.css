@@ -13,4 +13,26 @@ h1 {
 h2 {
   color: #2c5282;
   margin-bottom: 20px;
+}
+
+.weather-info {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin: 10px auto;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.weather-info h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.weather-info p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 0.9em;
 } 

@@ -40,4 +40,21 @@
   font-size: 0.8em;
   color: #333;
   text-shadow: 0 0 2px white;
+}
+
+/* For betting history stats */
+.history-stats-popup {
+  position: relative; /* Instead of absolute */
+  left: auto;
+  top: auto;
+  transform: none;
+  display: block; /* Always show in history */
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  padding: 8px;
+  margin-top: 8px;
+  width: 100%;
+  z-index: 1;
 } 

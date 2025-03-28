@@ -1,7 +1,7 @@
 import React from 'react';
 import './HorseStats.css';
 
-function HorseStats({ stats }) {
+function HorseStats({ stats, className = 'stats-popup' }) {
   const getStatColor = (value) => {
     if (value >= 80) return '#4CAF50';
     if (value >= 60) return '#8BC34A';
@@ -11,7 +11,7 @@ function HorseStats({ stats }) {
   };
 
   return (
-    <div className="horse-stats">
+    <div className={className}>
       {Object.entries(stats).map(([stat, value]) => (
         <div key={stat} className="stat-row">
           <span className="stat-label">{stat.charAt(0).toUpperCase() + stat.slice(1)}</span>

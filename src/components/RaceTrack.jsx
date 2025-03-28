@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './RaceTrack.css';
 import HorseStats from './HorseStats';
 
-function RaceTrack({ horses, isRacing, winner }) {
+function RaceTrack({ horses, isRacing, winner, weather }) {
   const [positions, setPositions] = useState({});
   const [raceFinished, setRaceFinished] = useState(false);
   const [surface] = useState(Math.random() < 0.5 ? 'grass' : 'dirt');
@@ -77,8 +77,11 @@ function RaceTrack({ horses, isRacing, winner }) {
   }, [isRacing, horses, winner]);
 
   return (
-    <div className={`race-track ${surface}`}>
-      <div className="surface-label">{surface.charAt(0).toUpperCase() + surface.slice(1)} Track</div>
+    <div className={`race-track ${surface} ${weather?.name.toLowerCase()}`}>
+      <div className="surface-label">
+        {surface.charAt(0).toUpperCase() + surface.slice(1)} Track 
+        {weather && ` • ${weather.icon}`}
+      </div>
       <div className="track-container">
         {horses.map((horse, index) => (
           <div key={horse.id} className={`track-lane ${surface}`}>

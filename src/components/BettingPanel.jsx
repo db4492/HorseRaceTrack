@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import './BettingPanel.css';
+import HorseStats from './HorseStats';
 
 function BettingPanel({ horses, onBet, disabled, bettingHistory }) {
   const [selectedHorse, setSelectedHorse] = useState(null);
   const [betAmount, setBetAmount] = useState(10);
+  const [expandedBet, setExpandedBet] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (selectedHorse && betAmount > 0) {
       onBet(selectedHorse, betAmount);
     }
+  };
+
+  const toggleStats = (betId) => {
+    setExpandedBet(expandedBet === betId ? null : betId);
   };
 
   return (
@@ -50,17 +56,34 @@ function BettingPanel({ horses, onBet, disabled, bettingHistory }) {
           <div className="history-list">
             {bettingHistory.map(bet => (
               <div key={bet.id} className={`history-item ${bet.didWin ? 'win' : 'loss'}`}>
-                <div className="bet-time">{bet.timestamp}</div>
-                <div className="bet-details">
-                  Bet ${bet.amount} on {bet.horseName}
-                </div>
-                <div className="bet-result">
+                <div className="history-main">
+                  <span className="history-horse">{bet.horseName}</span>
+                  <span className="history-weather">{bet.weatherIcon} {bet.weather}</span>
+                  <span className="history-amount">${bet.amount}</span>
                   {bet.didWin ? (
-                    <span className="win-amount">Won ${bet.winnings}</span>
+                    <span className="history-winnings">+${bet.winnings}</span>
                   ) : (
-                    <span className="loss-amount">Lost ${bet.amount} - {bet.winner} won</span>
+                    <span className="history-loss">Lost</span>
                   )}
                 </div>
+                <div className="history-details">
+                  <div className="winner-info">
+                    <span>Winner: {bet.winner}</span>
+                    <button 
+                      className="stats-toggle"
+                      onClick={() => toggleStats(bet.id)}
+                    >
+                      📊 Stats
+                    </button>
+                  </div>
+                  <span className="history-time">{bet.timestamp}</span>
+                </div>
+                {expandedBet === bet.id && (
+                  <div className="winner-stats">
+                    <h4>Winning Horse Stats</h4>
+                    <HorseStats stats={bet.winnerStats} className="history-stats-popup" />
+                  </div>
+                )}
               </div>
             ))}
           </div>

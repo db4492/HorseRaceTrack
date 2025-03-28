@@ -217,4 +217,46 @@
 
 .track-lane.dirt {
   background-color: #ebd5b6;
+}
+
+.history-weather {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+  font-size: 0.9em;
+  margin: 0 8px;
+}
+
+.winner-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-toggle {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.9em;
+  color: #666;
+  border-radius: 4px;
+}
+
+.stats-toggle:hover {
+  background: #f0f0f0;
+}
+
+.winner-stats {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f8f8f8;
+  border-radius: 4px;
+}
+
+.winner-stats h4 {
+  margin: 0 0 4px;
+  font-size: 0.9em;
+  color: #666;
 } 

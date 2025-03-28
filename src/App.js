@@ -1,9 +1,28 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import RaceTrack from './components/RaceTrack';
 import BettingPanel from './components/BettingPanel';
+import StatsLegend from './components/StatsLegend';
 import './App.css';
 
 function App() {
+  // First define the weather types
+  const weatherTypes = {
+    sunny: { name: "Sunny", icon: "☀️", effect: "Normal racing conditions" },
+    rainy: { name: "Rainy", icon: "🌧️", effect: "Slows down all horses, but high stamina horses perform better" },
+    windy: { name: "Windy", icon: "💨", effect: "Faster race times, but lower acceleration" },
+    stormy: { name: "Stormy", icon: "⛈️", effect: "Unpredictable performance, luck matters more" },
+    cloudy: { name: "Cloudy", icon: "☁️", effect: "Balanced conditions" }
+  };
+
+  // Then define the generate weather function
+  const generateWeather = () => {
+    const conditions = Object.keys(weatherTypes);
+    const randomWeather = conditions[Math.floor(Math.random() * conditions.length)];
+    return weatherTypes[randomWeather];
+  };
+
+  // Now we can use it in useState
+  const [weather, setWeather] = useState(generateWeather());
   const [balance, setBalance] = useState(1000);
   const [isRacing, setIsRacing] = useState(false);
   const [winner, setWinner] = useState(null);
@@ -101,54 +120,60 @@ function App() {
     }
   }, [isRacing, generateHorses]);
 
+  // Update horse performance based on weather
+  const calculateWeatherEffect = (horse, weather) => {
+    const stats = { ...horse.stats };
+    
+    switch(weather.name) {
+      case "Rainy":
+        stats.speed *= 0.9;
+        stats.stamina *= 1.2;
+        break;
+      case "Windy":
+        stats.speed *= 1.2;
+        stats.acceleration *= 0.8;
+        break;
+      case "Stormy":
+        stats.luck *= 1.5;
+        stats.speed *= 0.8;
+        break;
+      case "Cloudy":
+        // No effect
+        break;
+      default:
+        // Sunny - slight boost to all stats
+        stats.speed *= 1.1;
+        stats.stamina *= 1.1;
+        stats.acceleration *= 1.1;
+    }
+    
+    return stats;
+  };
+
   const handleBet = (horseId, amount) => {
     if (amount <= balance && !isRacing) {
       setBalance(prev => prev - amount);
       setIsRacing(true);
       
-      // Calculate weighted chances based on stats
-      const totalWeights = horses.map(horse => {
-        const stats = horse.stats;
-        // Weight calculation using all stats
-        return (stats.speed * 0.4) + // Speed is most important
-               (stats.stamina * 0.3) + // Stamina second most important
-               (stats.acceleration * 0.2) + // Acceleration third
-               (stats.luck * 0.1); // Luck has smallest impact
-      });
-
-      // Convert weights to probabilities
-      const totalWeight = totalWeights.reduce((a, b) => a + b, 0);
-      const probabilities = totalWeights.map(weight => weight / totalWeight);
-
-      // Select winner based on weighted probabilities
-      const random = Math.random();
-      let cumulativeProbability = 0;
-      let winner = horses[0];
-
-      for (let i = 0; i < horses.length; i++) {
-        cumulativeProbability += probabilities[i];
-        if (random <= cumulativeProbability) {
-          winner = horses[i];
-          break;
-        }
-      }
-      
+      const winner = horses[Math.floor(Math.random() * horses.length)];
       setWinner(winner);
       
       setTimeout(() => {
         const didWin = winner.id === horseId;
         const winnings = didWin ? amount * horses.find(h => h.id === horseId).odds : 0;
         
-        // Add bet to history
         setBettingHistory(prev => [{
           id: Date.now(),
           horseName: horses.find(h => h.id === horseId).name,
           amount: amount,
           winnings: winnings,
           winner: winner.name,
+          winnerStats: winner.stats,
           didWin: didWin,
-          timestamp: new Date().toLocaleTimeString()
-        }, ...prev].slice(0, 10)); // Keep last 10 bets
+          timestamp: new Date().toLocaleTimeString(),
+          weather: weather.name,
+          weatherIcon: weather.icon
+        }, ...prev].slice(0, 10));
 
         if (didWin) {
           setBalance(prev => prev + winnings);
@@ -156,6 +181,8 @@ function App() {
         } else {
           alert(`You lost! ${winner.name} won the race.`);
         }
+        
+        setWeather(generateWeather());
         setIsRacing(false);
         setTimeout(() => setWinner(null), 2000);
       }, 3000);
@@ -166,16 +193,29 @@ function App() {
     <div className="App">
       <h1>Horse Race Betting</h1>
       <h2>Balance: ${balance}</h2>
+      
+      {/* Add the legend after the header */}
+      <StatsLegend />
+      
+      {weather && (
+        <div className="weather-info">
+          <h3>{weather.icon} {weather.name} Conditions</h3>
+          <p>{weather.effect}</p>
+        </div>
+      )}
+
       <RaceTrack 
         horses={horses} 
         isRacing={isRacing} 
         winner={winner}
+        weather={weather}
       />
       <BettingPanel 
         horses={horses} 
         onBet={handleBet} 
         disabled={isRacing}
         bettingHistory={bettingHistory}
+        weather={weather}
       />
     </div>
   );
