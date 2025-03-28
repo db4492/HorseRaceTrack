@@ -3,6 +3,7 @@ import RaceTrack from './components/RaceTrack';
 import BettingPanel from './components/BettingPanel';
 import StatsLegend from './components/StatsLegend';
 import HorseFacts from './components/HorseFacts';
+import Achievements from './components/Achievements';
 import './App.css';
 
 function App() {
@@ -177,6 +178,108 @@ function App() {
   //   return stats;
   // };
 
+  const [achievements, setAchievements] = useState([]);
+  const [consecutiveWins, setConsecutiveWins] = useState(0);
+  const [lossStreak, setLossStreak] = useState(0);
+  const [showAchievements, setShowAchievements] = useState(false);
+
+  const achievementsList = {
+    firstWin: {
+      title: "Beginner's Luck",
+      description: "Won your first race!",
+      icon: "🎯"
+    },
+    bigWinner: {
+      title: "Horse Whisperer",
+      description: "Won more than 5x your bet",
+      icon: "🤫"
+    },
+    luckyStreak: {
+      title: "Lucky Duck",
+      description: "Won 3 races in a row",
+      icon: "🦆"
+    },
+    highRoller: {
+      title: "Money Bags",
+      description: "Bet over $500 in one race",
+      icon: "💰"
+    },
+    weatherMaster: {
+      title: "Storm Chaser",
+      description: "Won during stormy weather",
+      icon: "⛈️"
+    },
+    comeback: {
+      title: "Phoenix Rising",
+      description: "Won after losing 5 times",
+      icon: "🔥"
+    },
+    jackpot: {
+      title: "Golden Horseshoe",
+      description: "Won over $1000 in one race",
+      icon: "🏆"
+    },
+    underdog: {
+      title: "Dark Horse",
+      description: "Won with the lowest odds",
+      icon: "🐎"
+    }
+  };
+
+  const checkAchievements = (didWin, amount, winnings, weather) => {
+    const newAchievements = [...achievements];
+
+    // First win
+    if (didWin && !achievements.includes('firstWin')) {
+      newAchievements.push('firstWin');
+    }
+
+    // Big winner
+    if (didWin && winnings >= amount * 5 && !achievements.includes('bigWinner')) {
+      newAchievements.push('bigWinner');
+    }
+
+    // High roller
+    if (amount >= 500 && !achievements.includes('highRoller')) {
+      newAchievements.push('highRoller');
+    }
+
+    // Weather master
+    if (didWin && weather.name === 'Stormy' && !achievements.includes('weatherMaster')) {
+      newAchievements.push('weatherMaster');
+    }
+
+    // Jackpot
+    if (didWin && winnings >= 1000 && !achievements.includes('jackpot')) {
+      newAchievements.push('jackpot');
+    }
+
+    // Update consecutive wins/losses
+    if (didWin) {
+      const newConsecutiveWins = consecutiveWins + 1;
+      setConsecutiveWins(newConsecutiveWins);
+      setLossStreak(0);
+
+      // Lucky streak
+      if (newConsecutiveWins >= 3 && !achievements.includes('luckyStreak')) {
+        newAchievements.push('luckyStreak');
+      }
+    } else {
+      setConsecutiveWins(0);
+      const newLossStreak = lossStreak + 1;
+      setLossStreak(newLossStreak);
+
+      // Comeback achievement check will happen on next win
+    }
+
+    // If new achievements were earned, update state and show notification
+    if (newAchievements.length > achievements.length) {
+      setAchievements(newAchievements);
+      const newAchievement = newAchievements[newAchievements.length - 1];
+      alert(`🏆 Achievement Unlocked: ${achievementsList[newAchievement].title}!`);
+    }
+  };
+
   const handleBet = (horseId, amount) => {
     if (amount <= balance && !isRacing) {
       setBalance(prev => prev - amount);
@@ -194,6 +297,9 @@ function App() {
       setTimeout(() => {
         const didWin = winner.id === horseId;
         const winnings = didWin ? amount * horses.find(h => h.id === horseId).odds : 0;
+        
+        // Check achievements after determining win/loss
+        checkAchievements(didWin, amount, winnings, weather);
         
         // Stop the audio
         randomAudio.pause();
@@ -302,7 +408,7 @@ function App() {
           secondPlace={secondPlace}
         />
       )} */}
-      {/* <button 
+      <button 
         className="achievements-button"
         onClick={() => setShowAchievements(true)}
       >
@@ -312,9 +418,10 @@ function App() {
       {showAchievements && (
         <Achievements 
           achievements={achievements}
+          achievementsList={achievementsList}
           onClose={() => setShowAchievements(false)}
         />
-      )} */}
+      )}
     </div>
   );
 }
