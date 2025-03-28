@@ -280,12 +280,73 @@ function App() {
     }
   };
 
+  // Add new state for bribe feature
+  const [lastBribeTime, setLastBribeTime] = useState(() => {
+    const saved = localStorage.getItem('lastBribeTime');
+    return saved ? parseInt(saved) : 0;
+  });
+  const [bribeAvailable, setBribeAvailable] = useState(true);
+  const BRIBE_COST = 200; // Cost to bribe jockeys
+
+  // Add function to check if bribe is available
+  const checkBribeAvailability = useCallback(() => {
+    const now = Date.now();
+    const oneDayInMs = 24 * 60 * 60 * 1000;
+    const isAvailable = (now - lastBribeTime) >= oneDayInMs;
+    setBribeAvailable(isAvailable);
+  }, [lastBribeTime]);
+
+  // Check bribe availability on mount and when lastBribeTime changes
+  useEffect(() => {
+    checkBribeAvailability();
+    localStorage.setItem('lastBribeTime', lastBribeTime.toString());
+  }, [lastBribeTime, checkBribeAvailability]);
+
+  // Add bribe function
+  const handleBribe = () => {
+    if (!bribeAvailable) {
+      alert("🕒 Bribe not available! The jockeys are still suspicious from last time...");
+      return;
+    }
+    
+    if (balance < BRIBE_COST) {
+      alert("💰 Not enough money to bribe the jockeys!");
+      return;
+    }
+
+    const confirmBribe = window.confirm(
+      `🤫 Bribe the jockeys for $${BRIBE_COST}? This gives you a 50/50 chance of winning!`
+    );
+
+    if (confirmBribe) {
+      setBalance(prev => prev - BRIBE_COST);
+      setLastBribeTime(Date.now());
+      setBribeAvailable(false);
+      
+      // Set 50/50 chance for next race only
+      setBribeActive(true);
+      alert("🤝 The jockeys have been convinced... Your next race has a 50/50 chance!");
+    }
+  };
+
+  // Modify handleBet to include bribe logic
   const handleBet = (horseId, amount) => {
     if (amount <= balance && !isRacing) {
       setBalance(prev => prev - amount);
       setIsRacing(true);
       
-      const winner = horses[Math.floor(Math.random() * horses.length)];
+      let winner;
+      if (bribeActive) {
+        // 50/50 chance when bribe is active
+        winner = Math.random() < 0.5 ? 
+          horses.find(h => h.id === horseId) : // Player's horse wins
+          horses.find(h => h.id !== horseId);  // Random other horse wins
+        setBribeActive(false); // Reset bribe after use
+      } else {
+        // Normal random winner selection
+        winner = horses[Math.floor(Math.random() * horses.length)];
+      }
+      
       setWinner(winner);
       
       // Play the bugle call
@@ -360,6 +421,9 @@ function App() {
     document.title = "Cosmic Smasher Unstoppable Horse Race Simulator";
   }, []);
 
+  // Add this with other state declarations at the top of the App component
+  const [bribeActive, setBribeActive] = useState(false);
+
   return (
     <div className="App">
       <h1>Cosmic Smasher Unstoppable Horse Race Simulator</h1>
@@ -422,6 +486,17 @@ function App() {
           onClose={() => setShowAchievements(false)}
         />
       )}
+
+      <div className="tooltip-container">
+        <button 
+          className="bribe-button"
+          onClick={() => handleBribe()}
+          disabled={!bribeAvailable || isRacing}
+        >
+          {bribeAvailable ? "🤫 Bribe Jockeys ($200)" : "🕒 Bribe Unavailable"}
+        </button>
+        {!bribeAvailable && <span className="tooltip">Bribe not available! The jockeys are still suspicious from last time...</span>}
+      </div>
     </div>
   );
 }
