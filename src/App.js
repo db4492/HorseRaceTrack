@@ -3,8 +3,6 @@ import RaceTrack from './components/RaceTrack';
 import BettingPanel from './components/BettingPanel';
 import StatsLegend from './components/StatsLegend';
 import HorseFacts from './components/HorseFacts';
-import PhotoFinish from './components/PhotoFinish';
-import Achievements from './components/Achievements';
 import './App.css';
 
 function App() {
@@ -41,56 +39,6 @@ function App() {
     sounds.forEach(sound => sound.preload = 'auto');
     return sounds;
   });
-  const [showPhotoFinish, setShowPhotoFinish] = useState(false);
-  const [secondPlace, setSecondPlace] = useState(null);
-  const [achievements, setAchievements] = useState([]);
-  const [showAchievements, setShowAchievements] = useState(false);
-  const [consecutiveWins, setConsecutiveWins] = useState(0);
-  const [lossStreak, setLossStreak] = useState(0);
-
-  // Add this at the top of App.js with other state definitions
-  const achievementsList = {
-    firstWin: {
-      title: "Beginner's Luck",
-      description: "Won your first race!",
-      icon: "🎯"
-    },
-    bigWinner: {
-      title: "Horse Whisperer",
-      description: "Won more than 5x your bet",
-      icon: "🤫"
-    },
-    luckyStreak: {
-      title: "Lucky Duck",
-      description: "Won 3 races in a row",
-      icon: "🦆"
-    },
-    highRoller: {
-      title: "Money Bags",
-      description: "Bet over $500 in one race",
-      icon: "💰"
-    },
-    weatherMaster: {
-      title: "Storm Chaser",
-      description: "Won during stormy weather",
-      icon: "⛈️"
-    },
-    comeback: {
-      title: "Phoenix Rising",
-      description: "Won after losing 5 times",
-      icon: "🔥"
-    },
-    jackpot: {
-      title: "Golden Horseshoe",
-      description: "Won over $1000 in one race",
-      icon: "🏆"
-    },
-    underdog: {
-      title: "Dark Horse",
-      description: "Won with the lowest odds",
-      icon: "🐎"
-    }
-  };
 
   const personalityTraits = useMemo(() => [
     { trait: "Loves Carrots", icon: "🥕" },
@@ -347,14 +295,14 @@ function App() {
         <source src="/sounds/first-call.mp3" type="audio/mpeg" />
         <source src="/sounds/first-call.ogg" type="audio/ogg" />
       </audio>
-      {showPhotoFinish && (
+      {/* {showPhotoFinish && (
         <PhotoFinish 
           isVisible={showPhotoFinish} 
           winner={winner} 
           secondPlace={secondPlace}
         />
-      )}
-      <button 
+      )} */}
+      {/* <button 
         className="achievements-button"
         onClick={() => setShowAchievements(true)}
       >
@@ -366,7 +314,7 @@ function App() {
           achievements={achievements}
           onClose={() => setShowAchievements(false)}
         />
-      )}
+      )} */}
     </div>
   );
 }
