@@ -29,10 +29,14 @@ function App() {
   const [bettingHistory, setBettingHistory] = useState([]);
   const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
-  const [audio] = useState(() => {
-    const sound = new Audio('/sounds/first-call.mp3');
-    sound.preload = 'auto';
-    return sound;
+  const [audioFiles] = useState(() => {
+    const sounds = [
+      new Audio('/sounds/first-call.mp3'),
+      new Audio('/sounds/first-call2.mp3'),
+      new Audio('/sounds/first-call3.mp3')
+    ];
+    sounds.forEach(sound => sound.preload = 'auto');
+    return sounds;
   });
 
   const generateHorseName = useCallback(() => {
@@ -162,9 +166,10 @@ function App() {
       setBalance(prev => prev - amount);
       setIsRacing(true);
       
-      // Play the bugle call
-      audio.currentTime = 0;
-      audio.play()
+      // Randomly select one of the audio files
+      const randomAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];
+      randomAudio.currentTime = 0;
+      randomAudio.play()
         .catch(error => console.log('Audio playback failed:', error));
       
       const winner = horses[Math.floor(Math.random() * horses.length)];
@@ -175,8 +180,8 @@ function App() {
         const winnings = didWin ? amount * horses.find(h => h.id === horseId).odds : 0;
         
         // Stop the audio
-        audio.pause();
-        audio.currentTime = 0;
+        randomAudio.pause();
+        randomAudio.currentTime = 0;
         
         setBettingHistory(prev => [{
           id: Date.now(),
@@ -205,20 +210,23 @@ function App() {
     }
   };
 
-  // Clean up audio when component unmounts
+  // Clean up all audio when component unmounts
   useEffect(() => {
-    const currentAudio = audio;
+    const currentAudios = audioFiles;
     return () => {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
+      currentAudios.forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
     };
-  }, [audio]);
+  }, [audioFiles]);
 
+  // Update mute status for all audio files
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.muted = isMuted;
-    }
-  }, [isMuted]);
+    audioFiles.forEach(audio => {
+      audio.muted = isMuted;
+    });
+  }, [isMuted, audioFiles]);
 
   return (
     <div className="App">
