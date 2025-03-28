@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './RaceTrack.css';
+import HorseStats from './HorseStats';
 
 function RaceTrack({ horses, isRacing, winner }) {
   const [positions, setPositions] = useState({});
   const [raceFinished, setRaceFinished] = useState(false);
   const [surface] = useState(Math.random() < 0.5 ? 'grass' : 'dirt');
+  
+  // Add color assignment when horses are rendered
+  const horseColors = ['white', 'brown', 'black', 'grey'];
   
   useEffect(() => {
     if (isRacing) {
@@ -76,14 +80,20 @@ function RaceTrack({ horses, isRacing, winner }) {
     <div className={`race-track ${surface}`}>
       <div className="surface-label">{surface.charAt(0).toUpperCase() + surface.slice(1)} Track</div>
       <div className="track-container">
-        {horses.map(horse => (
+        {horses.map((horse, index) => (
           <div key={horse.id} className={`track-lane ${surface}`}>
             <div className="name-section">
-              <span className="horse-name">{horse.name}</span>
+              <span className="horse-name">
+                <span className="stats-indicator">📊</span>
+                {' '}{horse.name}
+              </span>
+              <div className="stats-popup">
+                <HorseStats stats={horse.stats} />
+              </div>
             </div>
             <div className="race-section">
               <div 
-                className={`horse-emoji ${raceFinished && winner?.id === horse.id ? 'winner' : ''}`}
+                className={`horse-emoji ${horseColors[index % horseColors.length]} ${raceFinished && winner?.id === horse.id ? 'winner' : ''}`}
                 style={{ 
                   left: `${positions[horse.id] || 0}%`,
                   transition: 'left 0.05s linear'

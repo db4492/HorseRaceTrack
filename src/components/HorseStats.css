@@ -1,0 +1,43 @@
+.horse-stats {
+  padding: 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin: 4px 0;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  gap: 8px;
+}
+
+.stat-label {
+  width: 100px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.stat-bar-container {
+  flex-grow: 1;
+  height: 12px;
+  background-color: #eee;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stat-bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.stat-value {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em;
+  color: #333;
+  text-shadow: 0 0 2px white;
+} 

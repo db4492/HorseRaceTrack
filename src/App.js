@@ -64,13 +64,26 @@ function App() {
       let name;
       do {
         name = generateHorseName();
-      } while (usedNames.has(name)); // Ensure unique names
+      } while (usedNames.has(name));
       
       usedNames.add(name);
+      // Generate random stats between 1-100
+      const stats = {
+        speed: Math.floor(Math.random() * 100) + 1,
+        stamina: Math.floor(Math.random() * 100) + 1,
+        acceleration: Math.floor(Math.random() * 100) + 1,
+        luck: Math.floor(Math.random() * 100) + 1
+      };
+      
+      // Calculate odds based on stats
+      const statAverage = (stats.speed + stats.stamina + stats.acceleration + stats.luck) / 4;
+      const odds = Math.max(1.5, (6 - (statAverage / 25))).toFixed(1);
+
       horses.push({
         id: i + 1,
         name: name,
-        odds: (Math.floor(Math.random() * 35) + 15) / 10
+        odds: parseFloat(odds),
+        stats: stats
       });
     }
     return horses;
@@ -93,7 +106,33 @@ function App() {
       setBalance(prev => prev - amount);
       setIsRacing(true);
       
-      const winner = horses[Math.floor(Math.random() * horses.length)];
+      // Calculate weighted chances based on stats
+      const totalWeights = horses.map(horse => {
+        const stats = horse.stats;
+        // Weight calculation using all stats
+        return (stats.speed * 0.4) + // Speed is most important
+               (stats.stamina * 0.3) + // Stamina second most important
+               (stats.acceleration * 0.2) + // Acceleration third
+               (stats.luck * 0.1); // Luck has smallest impact
+      });
+
+      // Convert weights to probabilities
+      const totalWeight = totalWeights.reduce((a, b) => a + b, 0);
+      const probabilities = totalWeights.map(weight => weight / totalWeight);
+
+      // Select winner based on weighted probabilities
+      const random = Math.random();
+      let cumulativeProbability = 0;
+      let winner = horses[0];
+
+      for (let i = 0; i < horses.length; i++) {
+        cumulativeProbability += probabilities[i];
+        if (random <= cumulativeProbability) {
+          winner = horses[i];
+          break;
+        }
+      }
+      
       setWinner(winner);
       
       setTimeout(() => {
