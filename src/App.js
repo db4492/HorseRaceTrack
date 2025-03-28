@@ -121,34 +121,34 @@ function App() {
   }, [isRacing, generateHorses]);
 
   // Update horse performance based on weather
-  const calculateWeatherEffect = (horse, weather) => {
-    const stats = { ...horse.stats };
+  // const calculateWeatherEffect = (horse, weather) => {
+  //   const stats = { ...horse.stats };
     
-    switch(weather.name) {
-      case "Rainy":
-        stats.speed *= 0.9;
-        stats.stamina *= 1.2;
-        break;
-      case "Windy":
-        stats.speed *= 1.2;
-        stats.acceleration *= 0.8;
-        break;
-      case "Stormy":
-        stats.luck *= 1.5;
-        stats.speed *= 0.8;
-        break;
-      case "Cloudy":
-        // No effect
-        break;
-      default:
-        // Sunny - slight boost to all stats
-        stats.speed *= 1.1;
-        stats.stamina *= 1.1;
-        stats.acceleration *= 1.1;
-    }
+  //   switch(weather.name) {
+  //     case "Rainy":
+  //       stats.speed *= 0.9;
+  //       stats.stamina *= 1.2;
+  //       break;
+  //     case "Windy":
+  //       stats.speed *= 1.2;
+  //       stats.acceleration *= 0.8;
+  //       break;
+  //     case "Stormy":
+  //       stats.luck *= 1.5;
+  //       stats.speed *= 0.8;
+  //       break;
+  //     case "Cloudy":
+  //       // No effect
+  //       break;
+  //     default:
+  //       // Sunny - slight boost to all stats
+  //       stats.speed *= 1.1;
+  //       stats.stamina *= 1.1;
+  //       stats.acceleration *= 1.1;
+  //   }
     
-    return stats;
-  };
+  //   return stats;
+  // };
 
   const handleBet = (horseId, amount) => {
     if (amount <= balance && !isRacing) {
