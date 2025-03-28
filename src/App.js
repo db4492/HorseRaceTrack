@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import RaceTrack from './components/RaceTrack';
 import BettingPanel from './components/BettingPanel';
 import StatsLegend from './components/StatsLegend';
@@ -92,7 +92,7 @@ function App() {
     }
   };
 
-  const personalityTraits = [
+  const personalityTraits = useMemo(() => [
     { trait: "Loves Carrots", icon: "🥕" },
     { trait: "Afraid of Butterflies", icon: "🦋" },
     { trait: "Dreams of Being a Unicorn", icon: "🦄" },
@@ -108,36 +108,36 @@ function App() {
     { trait: "Amateur Comedian", icon: "🎤" },
     { trait: "Scared of Own Shadow", icon: "👻" },
     { trait: "Dreams of Beach Vacation", icon: "🏖️" }
-  ];
+  ], []);
 
   const generateHorseName = useCallback(() => {
     // Move the word banks inside the callback
-    const adjectives = [
-      "Cosmic", "Midnight", "Thunder", "Lightning", "Mystic", "Crazy", 
-      "Dizzy", "Turbo", "Quantum", "Pixel", "Glitch", "Neon", "Laser",
-      "Rocket", "Chaos", "Disco", "Ninja", "Zombie", "Viking", "Pirate",
-      "Cyber", "Psycho", "Mega", "Ultra", "Hyper", "Retro", "Plasma",
-      "Nuclear", "Dragon", "Ghost", "Savage", "Disco", "Rainbow", "Metal",
-      "Space", "Time", "Storm", "Nebula", "Galactic", "Techno", "Wizard"
-    ];
+  const adjectives = [
+    "Cosmic", "Midnight", "Thunder", "Lightning", "Mystic", "Crazy", 
+    "Dizzy", "Turbo", "Quantum", "Pixel", "Glitch", "Neon", "Laser",
+    "Rocket", "Chaos", "Disco", "Ninja", "Zombie", "Viking", "Pirate",
+    "Cyber", "Psycho", "Mega", "Ultra", "Hyper", "Retro", "Plasma",
+    "Nuclear", "Dragon", "Ghost", "Savage", "Disco", "Rainbow", "Metal",
+    "Space", "Time", "Storm", "Nebula", "Galactic", "Techno", "Wizard"
+  ];
 
-    const actions = [
-      "Dancer", "Sprinter", "Drifter", "Climber", "Surfer", "Jumper",
-      "Warrior", "Racer", "Crusher", "Dasher", "Prancer", "Zoomer",
-      "Slider", "Glider", "Hopper", "Runner", "Charger", "Blazer",
-      "Smasher", "Blaster", "Ninja", "Dazzler", "Sparkler", "Brawler",
-      "Bouncer", "Rusher", "Crasher", "Basher", "Slasher", "Zapper",
-      "Ripper", "Raver", "Rager", "Rocker", "Rebel", "Phantom"
-    ];
+  const actions = [
+    "Dancer", "Sprinter", "Drifter", "Climber", "Surfer", "Jumper",
+    "Warrior", "Racer", "Crusher", "Dasher", "Prancer", "Zoomer",
+    "Slider", "Glider", "Hopper", "Runner", "Charger", "Blazer",
+    "Smasher", "Blaster", "Ninja", "Dazzler", "Sparkler", "Brawler",
+    "Bouncer", "Rusher", "Crasher", "Basher", "Slasher", "Zapper",
+    "Ripper", "Raver", "Rager", "Rocker", "Rebel", "Phantom"
+  ];
 
-    const descriptors = [
-      "of Doom", "of Glory", "Supreme", "Ultimate", "Master", "Champion",
-      "Legend", "Beast", "Machine", "Prime", "Elite", "Extreme",
-      "Maverick", "Prodigy", "Phenomenon", "Wonder", "Mastermind",
-      "of Chaos", "of Thunder", "Infinity", "Maximum", "Ultra",
-      "of Mystery", "of Power", "Unleashed", "Evolved", "Ascended",
-      "of Light", "of Darkness", "Eternal", "Unstoppable", "Invincible"
-    ];
+  const descriptors = [
+    "of Doom", "of Glory", "Supreme", "Ultimate", "Master", "Champion",
+    "Legend", "Beast", "Machine", "Prime", "Elite", "Extreme",
+    "Maverick", "Prodigy", "Phenomenon", "Wonder", "Mastermind",
+    "of Chaos", "of Thunder", "Infinity", "Maximum", "Ultra",
+    "of Mystery", "of Power", "Unleashed", "Evolved", "Ascended",
+    "of Light", "of Darkness", "Eternal", "Unstoppable", "Invincible"
+  ];
 
     const namePatterns = [
       // Pattern 1: Adjective + Action
@@ -168,8 +168,6 @@ function App() {
       } while (usedNames.has(name));
       
       usedNames.add(name);
-      
-      // Make sure we're selecting a random personality trait
       const randomTraitIndex = Math.floor(Math.random() * personalityTraits.length);
       const personality = personalityTraits[randomTraitIndex];
 
@@ -187,7 +185,7 @@ function App() {
       });
     }
     return horses;
-  }, [generateHorseName]);
+  }, [generateHorseName, personalityTraits]);
 
   const [horses, setHorses] = useState(() => generateHorses());
 
@@ -230,64 +228,6 @@ function App() {
     
   //   return stats;
   // };
-
-  // Function to check and award achievements
-  const checkAchievements = (didWin, amount, winnings, weather) => {
-    const newAchievements = [...achievements];
-
-    // First win
-    if (didWin && !achievements.includes('firstWin')) {
-      newAchievements.push('firstWin');
-    }
-
-    // Big winner
-    if (didWin && winnings >= amount * 5 && !achievements.includes('bigWinner')) {
-      newAchievements.push('bigWinner');
-    }
-
-    // High roller
-    if (amount >= 500 && !achievements.includes('highRoller')) {
-      newAchievements.push('highRoller');
-    }
-
-    // Weather master
-    if (didWin && weather.name === 'Stormy' && !achievements.includes('weatherMaster')) {
-      newAchievements.push('weatherMaster');
-    }
-
-    // Jackpot
-    if (didWin && winnings >= 1000 && !achievements.includes('jackpot')) {
-      newAchievements.push('jackpot');
-    }
-
-    // Update consecutive wins
-    if (didWin) {
-      const newConsecutiveWins = consecutiveWins + 1;
-      setConsecutiveWins(newConsecutiveWins);
-      setLossStreak(0);
-
-      // Lucky streak
-      if (newConsecutiveWins >= 3 && !achievements.includes('luckyStreak')) {
-        newAchievements.push('luckyStreak');
-      }
-    } else {
-      setConsecutiveWins(0);
-      const newLossStreak = lossStreak + 1;
-      setLossStreak(newLossStreak);
-
-      // Comeback
-      if (newLossStreak >= 5 && didWin && !achievements.includes('comeback')) {
-        newAchievements.push('comeback');
-      }
-    }
-
-    // If new achievements were earned, update state and show notification
-    if (newAchievements.length > achievements.length) {
-      setAchievements(newAchievements);
-      const newAchievement = newAchievements[newAchievements.length - 1];
-      alert(`🏆 Achievement Unlocked: ${achievementsList[newAchievement].title}!`);
-    }
-  };
 
   const handleBet = (horseId, amount) => {
     if (amount <= balance && !isRacing) {
