@@ -97,6 +97,10 @@
   filter: saturate(0) brightness(75%);
 }
 
+.horse-emoji.red {
+  filter: hue-rotate(340deg) saturate(200%) brightness(90%);
+}
+
 .horse-emoji.winner {
   filter: drop-shadow(0 0 8px #ffd700);
   color: #ffd700;
@@ -122,6 +126,10 @@
 
 .horse-emoji.grey.winner {
   filter: saturate(0) brightness(75%) drop-shadow(0 0 8px #ffd700);
+}
+
+.horse-emoji.red.winner {
+  filter: hue-rotate(340deg) saturate(200%) brightness(90%) drop-shadow(0 0 8px #ffd700);
 }
 
 .surface-label {

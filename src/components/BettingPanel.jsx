@@ -21,6 +21,18 @@ function BettingPanel({ horses, onBet, disabled, bettingHistory }) {
   return (
     <div className="betting-panel">
       <form onSubmit={handleSubmit}>
+        <div className="bet-amount">
+          <input
+            type="number"
+            value={betAmount}
+            onChange={(e) => setBetAmount(Number(e.target.value))}
+            min="1"
+            disabled={disabled}
+          />
+          <button type="submit" disabled={!selectedHorse || disabled}>
+            Place Bet
+          </button>
+        </div>
         <div className="horse-selection">
           {horses.map(horse => (
             <button
@@ -33,18 +45,6 @@ function BettingPanel({ horses, onBet, disabled, bettingHistory }) {
               {horse.name} (x{horse.odds})
             </button>
           ))}
-        </div>
-        <div className="bet-amount">
-          <input
-            type="number"
-            value={betAmount}
-            onChange={(e) => setBetAmount(Number(e.target.value))}
-            min="1"
-            disabled={disabled}
-          />
-          <button type="submit" disabled={!selectedHorse || disabled}>
-            Place Bet
-          </button>
         </div>
       </form>
 

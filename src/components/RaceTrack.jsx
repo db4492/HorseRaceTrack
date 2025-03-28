@@ -8,7 +8,7 @@ function RaceTrack({ horses, isRacing, winner, weather }) {
   const [surface] = useState(Math.random() < 0.5 ? 'grass' : 'dirt');
   
   // Add color assignment when horses are rendered
-  const horseColors = ['white', 'brown', 'black', 'grey'];
+  const horseColors = ['white', 'brown', 'black', 'grey', 'red'];
   
   useEffect(() => {
     if (isRacing) {
